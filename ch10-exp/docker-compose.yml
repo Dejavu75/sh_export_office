@@ -1,0 +1,29 @@
+services:
+  main-mysql:
+    image: mysql:latest
+    container_name: ${MYSQL_CONTAINER_NAME}
+    ports:
+      - "${MYSQL_PORT}:3306"
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    restart: unless-stopped
+    volumes:
+      - "${MYSQL_DATA_PATH}:/var/lib/mysql"
+
+  main-phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: ${PHPMYADMIN_CONTAINER_NAME}
+    ports:
+      - "${PHPMYADMIN_PORT}:80"
+    environment:
+      PMA_HOST: ${MYSQL_CONTAINER_NAME}
+      PMA_PORT: 3306
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    depends_on:
+      - main-mysql
+    restart: unless-stopped
